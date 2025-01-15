@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор ментальных карт</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        body {
+            background-color: #f3f4f6;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #1f2937;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: #6b7280;
+        }
+        
+        .input-section {
+            margin-bottom: 2rem;
+        }
+        
+        .textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            resize: vertical;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+            margin-bottom: 1rem;
+        }
+        
+        .textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .button {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .button:hover {
+            background-color: #2563eb;
+        }
+        
+        .button:disabled {
+            background-color: #93c5fd;
+            cursor: not-allowed;
+        }
+        
+        .status {
+            margin-top: 2rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #f3f4f6;
+            text-align: center;
+        }
+        
+        .status.loading {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .status.success {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        
+        .result-section {
+            margin-top: 2rem;
+        }
+        
+        .result-image {
+            max-width: 100%;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 1.5rem;
+            height: 1.5rem;
+            border: 3px solid #e5e7eb;
+            border-radius: 50%;
+            border-top-color: #3b82f6;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        #myImage {
+            display: none;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Генератор ментальных карт</h1>
+            <p>Введите текст для создания ментальной карты</p>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <textarea id="inputText" class="textarea" placeholder="Введите ваш текст здесь..."></textarea>
+                <button id="generateButton" class="button" onclick="startGeneration()">
+                    <i class="fas fa-brain"></i>
+                    Сгенерировать карту
+                </button>
+            </div>
+
+            <div id="status" class="status">
+                Готов к работе
+            </div>
+
+            <div class="result-section">
+                <img id="generatedImage" class="result-image" alt="Сгенерированная ментальная карта">
+                <button id="showButton" class="button" onclick="showImage()">Показать изображение</button>
+                <img id="myImage" src="" alt="Сгенерированное изображение">
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:8000';
+        let isGenerating = false;
+
+        async function startGeneration() {
+            if (isGenerating) return;
+
+            const statusDiv = document.getElementById('status');
+            const button = document.getElementById('generateButton');
+            const inputText = document.getElementById('inputText').value;
+            const imgElement = document.getElementById('generatedImage');
+
+            if (!inputText.trim()) {
+                statusDiv.textContent = 'Пожалуйста, введите текст';
+                statusDiv.className = 'status error';
+                return;
+            }
+
+            try {
+                isGenerating = true;
+                button.disabled = true;
+                statusDiv.className = 'status loading';
+                imgElement.style.display = 'none';
+
+                statusDiv.innerHTML = `
+                    <div class="loading-spinner"></div>
+                    <div>Отправка запроса...</div>
+                `;
+
+                const response = await fetch(`${API_URL}/mental_map_generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        content: inputText
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Ошибка сервера: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Функция проверки статуса
+                const checkStatus = async() => {
+                    const statusResponse = await fetch(`${API_URL}/mental_map_status/${data.task_id}`);
+                    const statusData = await statusResponse.json();
+
+                    statusDiv.innerHTML = `
+                        <div class="loading-spinner"></div>
+                        <div>${statusData.message}</div>
+                    `;
+
+                    if (statusData.status === 'completed') {
+                        const imgResponse = await fetch(`${API_URL}/mental_map_get/1_graph.png`);
+                        const blob = await imgResponse.blob();
+                        const imgUrl = URL.createObjectURL(blob);
+
+                        imgElement.src = imgUrl;
+                        imgElement.style.display = 'block';
+
+                        statusDiv.className = 'status success';
+                        statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Карта успешно сгенерирована';
+
+                        button.disabled = false;
+                        isGenerating = false;
+                    } else if (statusData.status === 'error') {
+                        throw new Error(statusData.message);
+                    } else {
+                        setTimeout(checkStatus, 5000);
+                    }
+                };
+
+                checkStatus();
+
+            } catch (error) {
+                console.error('Error:', error);
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> Ошибка: ${error.message}`;
+                button.disabled = false;
+                isGenerating = false;
+            }
+        }
+
+        function showImage() {
+            const imgElement = document.getElementById('myImage');
+            imgElement.style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

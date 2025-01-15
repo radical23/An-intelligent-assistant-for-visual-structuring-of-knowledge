@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Инструменты для редактирования</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #6c63ff, #c4c4ff);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        h1 {
+            margin-top: 20px;
+            font-size: 32px;
+            color: white;
+            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        
+        .container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 50px;
+            gap: 60px;
+        }
+        
+        .button-container {
+            text-align: center;
+            width: 150px;
+            position: relative;
+        }
+        
+        .button-container img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .button-container img:hover {
+            transform: scale(1.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .button-container button {
+            margin-top: 15px;
+            padding: 8px 12px;
+            background: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .button-container button:hover {
+            background-color: #524fd1;
+            transform: scale(1.1);
+        }
+        
+        .arrow {
+            position: absolute;
+            width: 80px;
+            height: 2px;
+            background-color: white;
+            transition: transform 0.3s;
+        }
+        
+        .arrow:after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            border: 5px solid transparent;
+            border-left-color: white;
+        }
+        
+        .arrow-left {
+            transform: rotate(-30deg);
+            left: 15%;
+            top: -20px;
+        }
+        
+        .arrow-right {
+            transform: rotate(30deg);
+            right: 15%;
+            top: -20px;
+        }
+        
+        .background-circles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .circle.small {
+            width: 60px;
+            height: 60px;
+            left: 20%;
+            top: 15%;
+            animation-delay: 0s;
+        }
+        
+        .circle.medium {
+            width: 100px;
+            height: 100px;
+            right: 10%;
+            top: 30%;
+            animation-delay: 2s;
+        }
+        
+        .circle.large {
+            width: 200px;
+            height: 200px;
+            left: 25%;
+            bottom: 10%;
+            animation-delay: 4s;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Инструменты для редактирования</h1>
+
+    <div class="container">
+        <div class="button-container">
+            <img src="/icons/llama_generation.jpg" alt="Llama Icon" />
+            <button onclick="navigateTo('llama')">Llama Генерация</button>
+        </div>
+
+        <div class="button-container">
+            <img src="/icons/rucorenews_generation.jpg" alt="RuCore Icon" />
+            <button onclick="navigateTo('ru_core_news')">RuCoreNews Генерация</button>
+        </div>
+
+        <div class="button-container">
+            <img src="/icons/sdelai_sam.jpg" alt="Manual Icon" />
+            <button onclick="navigateTo('manual')">Создать самому</button>
+        </div>
+    </div>
+
+    <div class="background-circles">
+        <div class="circle small"></div>
+        <div class="circle medium"></div>
+        <div class="circle large"></div>
+    </div>
+
+    <script>
+        function navigateTo(option) {
+            switch (option) {
+                case 'llama':
+                    window.location.href = 'generating_mind_maps.html';
+                    break;
+                case 'ru_core_news':
+                    window.location.href = 'ru_core_news_generator.html';
+                    break;
+                case 'manual':
+                    window.location.href = 'mind_maps.html';
+                    break;
+                default:
+                    alert('Неизвестный выбор!');
+            }
+        }
+    </script>
+</body>
+
+</html>

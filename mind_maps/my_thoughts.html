@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сохранённые графы</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #6A0DAD;
+            color: white;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        #graphs-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .graph-card {
+            background-color: #8A2BE2;
+            border: 2px solid white;
+            border-radius: 8px;
+            padding: 15px;
+            width: 250px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        
+        .graph-card h2 {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        
+        .graph-card button {
+            background-color: white;
+            color: #6A0DAD;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .graph-card button:hover {
+            background-color: #E6E6FA;
+        }
+        
+        #graph-display {
+            width: 100%;
+            height: 500px;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+        }
+    </style>
+    <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+</head>
+
+<body>
+    <h1>Сохранённые графы</h1>
+    <div id="graphs-container">
+        <!-- Здесь будут отображены графы -->
+    </div>
+    <div id="graph-display">
+        <!-- Здесь будет отображаться выбранный граф -->
+    </div>
+    <script>
+        async function loadGraphs() {
+            try {
+                const response = await fetch("http://localhost:3000/load-graphs");
+                const graphs = await response.json();
+
+                console.log("Полученные графы:", graphs); // Отладочный вывод данных с сервера
+
+                const container = document.getElementById("graphs-container");
+                container.innerHTML = ""; // Очищаем контейнер перед добавлением новых данных
+
+                if (graphs.length === 0) {
+                    container.innerHTML = "<p>Сохранённых графов пока нет.</p>";
+                    return;
+                }
+
+                graphs.forEach(graph => {
+                    console.log("Обрабатываем граф:", graph); // Отладочный вывод каждого графа
+                    const card = document.createElement("div");
+                    card.className = "graph-card";
+
+                    const title = document.createElement("h2");
+                    title.textContent = graph.graphName;
+                    card.appendChild(title);
+
+                    const button = document.createElement("button");
+                    button.textContent = "Открыть граф";
+                    button.onclick = () => {
+                        renderGraph(graph); // Рендерим граф
+                    };
+                    card.appendChild(button);
+
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Ошибка при загрузке графов:", error);
+                alert("Не удалось загрузить сохранённые графы.");
+            }
+        }
+
+
+        function validateGraph(graph) {
+            const nodeIds = new Set(graph.nodes.map(node => node.id));
+            console.log("Список ID узлов:", Array.from(nodeIds)); // Список всех узлов
+
+            const invalidLinks = graph.links.filter(link =>
+                !nodeIds.has(link.source) || !nodeIds.has(link.target)
+            );
+
+            if (invalidLinks.length > 0) {
+                console.warn("Обнаружены некорректные связи:", invalidLinks); // Печать ошибочных связей
+            }
+
+            return {
+                ...graph,
+                links: graph.links.filter(link =>
+                    nodeIds.has(link.source) && nodeIds.has(link.target)
+                )
+            };
+        }
+
+
+
+        function renderGraph(graph) {
+            console.log("Изначальные данные графа для отрисовки:", graph); // Отладка исходных данных
+
+            const container = document.getElementById("graph-display");
+            container.innerHTML = ""; // Очищаем контейнер перед отрисовкой
+
+            const validGraph = validateGraph(graph);
+            console.log("Валидированный граф для отрисовки:", validGraph); // Отладка валидированных данных
+
+            const nodes = validGraph.nodes.map(node => ({
+                ...node,
+                label: node.label || `Node ${node.id}`
+            }));
+            console.log("Узлы для рендеринга:", nodes); // Отладка узлов
+            console.log("Связи для рендеринга:", validGraph.links); // Отладка связей
+
+            const cy = cytoscape({
+                container,
+                elements: [
+                    ...nodes.map(node => ({
+                        data: {
+                            id: node.id,
+                            label: node.label
+                        }
+                    })),
+                    ...validGraph.links.map(link => ({
+                        data: {
+                            source: link.source,
+                            target: link.target
+                        }
+                    }))
+                ],
+                style: [{
+                    selector: 'node[label]',
+                    style: {
+                        'background-color': '#6A0DAD',
+                        'label': 'data(label)',
+                        'text-valign': 'center',
+                        'color': 'white',
+                        'font-size': '12px'
+                    }
+                }, {
+                    selector: 'edge',
+                    style: {
+                        'width': 2,
+                        'line-color': '#E6E6FA',
+                        'target-arrow-color': '#E6E6FA',
+                        'target-arrow-shape': 'triangle'
+                    }
+                }],
+                layout: {
+                    name: 'grid',
+                    fit: true
+                }
+            });
+        }
+
+
+
+
+
+        window.onload = loadGraphs;
+    </script>
+</body>
+
+</html>

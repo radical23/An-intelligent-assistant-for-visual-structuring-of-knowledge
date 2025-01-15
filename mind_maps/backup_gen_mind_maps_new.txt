@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генерация ментальной карты</title>
+</head>
+
+<body>
+    <h1>Генерация ментальной карты</h1>
+
+    <!-- Поле для загрузки файла -->
+    <div>
+        <label for="fileInput">Загрузить текстовый файл:</label>
+        <input type="file" id="fileInput" accept=".txt" />
+    </div>
+    <br>
+
+    <!-- Поле для ручного ввода текста -->
+    <div>
+        <label for="textInput">Или введите текст вручную:</label>
+        <textarea id="textInput" placeholder="Введите текст здесь..." rows="6" cols="50"></textarea>
+    </div>
+    <br>
+
+    <!-- Кнопка для отправки текста -->
+    <button id="generateButton">Сгенерировать карту</button>
+
+    <h2>Результат</h2>
+    <!-- Здесь будет отображаться изображение ментальной карты -->
+    <img id="generatedImage" alt="Generated Mind Map" style="max-width: 100%; display: none;" />
+
+    <script>
+        document.getElementById('generateButton').onclick = async function() {
+            const fileInput = document.getElementById('fileInput');
+            const textInput = document.getElementById('textInput');
+            let text = '';
+
+            // Чтение текста из загруженного файла
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                text = await file.text();
+            } else if (textInput.value.trim() !== '') {
+                // Используем текст из текстового поля
+                text = textInput.value.trim();
+            } else {
+                alert("Пожалуйста, загрузите файл или введите текст!");
+                return;
+            }
+
+            try {
+                // Первый запрос для передачи данных
+                const responseData = await fetch('http://127.0.0.1:8000/mental_map_generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        content: text
+                    })
+                });
+
+                /*if (!responseData.ok) {
+                    throw new Error('Ошибка при получении данных.');
+                }*/
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Ошибка при отправке данных на сервер.');
+            }
+            try {
+                await new Promise(resolve => setTimeout(resolve, 2000)); // Задержка
+                // Теперь делаем второй запрос для получения изображения
+                const responseImage = await fetch('http://127.0.0.1:8000/mental_map_get/1_graph.png', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!responseImage.ok) {
+                    throw new Error('Ошибка при получении изображения.');
+                }
+
+                // Получение изображения как Blob
+                const blob = await responseImage.blob();
+
+                // Создание URL для Blob
+                const imageUrl = URL.createObjectURL(blob);
+
+                // Сохранение URL изображения в переменную
+                const imageVariable = imageUrl;
+
+                console.log("Изображение успешно получено и сохранено в переменной:", imageVariable);
+
+                // Если нужно отобразить изображение на странице
+                const imgElement = document.getElementById('generatedImage');
+                imgElement.src = imageVariable;
+                imgElement.style.display = 'block';
+
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка при выполнении запросов. Проверьте подключение к серверу.');
+            }
+        };
+    </script>
+</body>
+
+</html>
