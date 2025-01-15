@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Простой пример с Neo4j</title>
+    <!-- Подключаем Neo4j драйвер для браузера -->
+    <script src="https://unpkg.com/neo4j-driver/dist/neo4j-driver.min.js"></script>
+</head>
+
+<body>
+    <h1>Сохранение записи в Neo4j</h1>
+    <button id="saveButton">Сохранить запись</button>
+    <p id="result"></p>
+
+    <script>
+        // Убедитесь, что скрипт выполняется после загрузки библиотеки
+        window.onload = function() {
+            const driver = neo4j.driver(
+                'bolt://localhost:7687', // URL вашего Neo4j сервера
+                neo4j.auth.basic('neo4j', '') // Ваши учетные данные для авторизации
+            );
+
+            const session = driver.session();
+
+            document.getElementById('saveButton').onclick = async function() {
+                const nodeName = "TestNode"; // Имя узла, который вы хотите создать
+                try {
+                    const result = await session.run(
+                        'CREATE (n:Node {name: $name}) RETURN n', {
+                            name: nodeName
+                        }
+                    );
+                    document.getElementById('result').innerText = `Узел "${nodeName}" успешно создан.`;
+                } catch (error) {
+                    document.getElementById('result').innerText = `Ошибка: ${error.message}`;
+                }
+            };
+
+            window.addEventListener('beforeunload', async() => {
+                await session.close();
+                await driver.close();
+            });
+        };
+    </script>
+</body>
+
+</html>

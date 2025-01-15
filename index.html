@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Structuring Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #6c63ff, #c4c4ff);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        h2 {
+            font-size: 32px;
+            color: #6c63ff;
+            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+            margin: 20px;
+        }
+        
+        #loader {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 2px dashed #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out;
+            text-align: center;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        #imagePreview {
+            margin-top: 10px;
+            max-width: 100%;
+            height: auto;
+            transition: transform 0.3s;
+        }
+        
+        #imagePreview:hover {
+            transform: scale(1.05);
+        }
+        
+        #startButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        
+        #startButton:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        
+        #startButton:active {
+            background-color: #004099;
+            transform: scale(0.95);
+        }
+        
+        .background-circles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .circle.small {
+            width: 60px;
+            height: 60px;
+            left: 20%;
+            top: 15%;
+            animation-delay: 0s;
+        }
+        
+        .circle.medium {
+            width: 100px;
+            height: 100px;
+            right: 10%;
+            top: 30%;
+            animation-delay: 2s;
+        }
+        
+        .circle.large {
+            width: 200px;
+            height: 200px;
+            left: 25%;
+            bottom: 10%;
+            animation-delay: 4s;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loader">
+        <h2>Добро пожаловать в приложение</h2>
+        <img id="imagePreview" src="mindstruct.jpg" alt="Предустановленное изображение" />
+        <button id="startButton">Начать</button>
+    </div>
+
+    <div class="background-circles">
+        <div class="circle small"></div>
+        <div class="circle medium"></div>
+        <div class="circle large"></div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>

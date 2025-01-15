@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ментальная карта</title>
+    <style>
+        /* Стили для контейнера с ментальной картой */
+        
+        #cy {
+            width: 100%;
+            /* Занимает всю ширину экрана */
+            height: 90vh;
+            /* Высота 90% окна */
+            display: block;
+            /* Отображается как блок */
+            border: 1px solid black;
+            /* Граница черного цвета */
+        }
+        /* Стили для панели инструментов */
+        
+        .toolbar {
+            margin: 20px;
+            /* Отступы вокруг панели */
+        }
+        /* Стили для кнопок на панели инструментов */
+        
+        button {
+            margin: 5px;
+            /* Отступы между кнопками */
+        }
+        /* Скрытый input для загрузки изображений */
+        
+        #imageUpload {
+            display: none;
+            /* Скрываем элемент, но его можно использовать для загрузки файлов */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="toolbar">
+        <button id="addNode">Добавить узел</button>
+        <button id="removeNode">Удалить узел</button>
+        <button id="editNode">Переименовать узел</button>
+        <button id="addEdge">Добавить связь</button>
+        <button id="removeEdge">Удалить связь</button>
+        <button id="saveGraph">Сохранить граф</button>
+        <!--<ul id="graphList"></ul>-->
+    </div>
+
+    <!-- Контейнер для ментальной карты -->
+    <div id="cy"></div>
+
+    <!-- Скрытый input для выбора файлов изображения -->
+    <input type="file" id="imageUpload" accept="image/*">
+
+    <!-- Подключаем библиотеки -->
+    <script src="https://unpkg.com/cytoscape@3.21.1/dist/cytoscape.min.js"></script>
+    <script src="mental_maps.js"></script>
+</body>
+
+</html>

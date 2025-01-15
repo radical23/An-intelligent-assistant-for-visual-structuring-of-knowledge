@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6c63ff, #c4c4ff);
+            /* Фиолетовый градиент */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        #registerForm {
+            border: 2px solid #ccc;
+            padding: 100px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            /* Ширина меню регистрации */
+        }
+        
+        input {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        
+        button {
+            cursor: pointer;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        
+        button:active {
+            background-color: #004099;
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="registerForm">
+        <h2>Регистрация</h2>
+        <input type="text" id="nameInput" placeholder="Введите ваше имя" required>
+        <input type="email" id="emailInput" placeholder="Введите ваш Email" required>
+        <input type="password" id="passwordInput" placeholder="Введите пароль" required>
+        <button id="passButton" type="submit">Войти</button>
+        <button id="registerButton" type="submit">Зарегистрироваться</button>
+    </div>
+
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="register.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ИВТ-465</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #6c63ff, #c4c4ff);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 70%;
+            /* 2/3 ширины страницы */
+            height: 95%;
+            /* Высота контейнера */
+            background: #fff;
+            color: #333;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            text-align: center;
+            background-color: #6c63ff;
+            color: #fff;
+            padding: 10px 0;
+            font-size: 24px;
+            font-weight: bold;
+            width: 100%;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            padding: 20px;
+            height: 100%;
+        }
+        
+        .people {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            margin-right: 20px;
+        }
+        
+        .person {
+            display: flex;
+            align-items: center;
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .person img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        
+        .person-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .person-name {
+            font-weight: bold;
+            font-size: 18px;
+            margin: 0;
+        }
+        
+        .person-role {
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .graph {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f0f0f0;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+        }
+        
+        .graph img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            ИВТ-465 — Участники и граф
+        </div>
+        <div class="content">
+            <div class="people">
+                <div class="person">
+
+                    <div class="person-info">
+                        <p class="person-name">Бардикова Анастасия</p>
+                        <p class="person-role">Data scientist 1</p>
+                    </div>
+                </div>
+                <div class="person">
+
+                    <div class="person-info">
+                        <p class="person-name">Пугачёва Анна</p>
+                        <p class="person-role">Data Scientist 2</p>
+                    </div>
+                </div>
+                <div class="person">
+
+                    <div class="person-info">
+                        <p class="person-name">Дятчин Артём</p>
+                        <p class="person-role">Data Engineer</p>
+                    </div>
+                </div>
+                <div class="person">
+
+                    <div class="person-info">
+                        <p class="person-name">Каштанов Роман</p>
+                        <p class="person-role">ML Engineer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="graph">
+                <img src="icons/1_graph.png" alt="Граф">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
